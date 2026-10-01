@@ -11,6 +11,7 @@ export default function Register() {
     confirmPassword: "", program: "B.Sc. Computer Science (AI)", year: "First Year"
   });
   const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState("");
 
   function change(e) {
     setForm((current) => ({ ...current, [e.target.name]: e.target.value }));
@@ -20,11 +21,15 @@ export default function Register() {
     e.preventDefault();
     const validation = validateRegistration(form);
     setErrors(validation);
+    setSuccessMessage("");
     if (Object.keys(validation).length) return;
 
     try {
-      await register(form);
-      alert("Registration successful!");
+      const result = await register(form);
+      if (result.confirmationRequired) {
+        setSuccessMessage("Account created. Check your email to confirm it, then log in.");
+        return;
+      }
       navigate("/dashboard");
     } catch (error) {
       setErrors({ form: error.message });
@@ -42,6 +47,7 @@ export default function Register() {
 
         <form className="register-form" onSubmit={submit}>
           {errors.form && <div className="form-alert error">{errors.form}</div>}
+          {successMessage && <div className="form-alert success">{successMessage}</div>}
           <div className="field-grid">
             <label>Full name<input name="name" value={form.name} onChange={change} placeholder="Your name" />{errors.name && <small className="field-error">{errors.name}</small>}</label>
             <label>Username<input name="username" value={form.username} onChange={change} placeholder="student01" />{errors.username && <small className="field-error">{errors.username}</small>}</label>

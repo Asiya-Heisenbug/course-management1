@@ -12,7 +12,7 @@ export default function Home() {
           <h1>Learning,<br /><span>under command.</span></h1>
           <p>
             Course Command is a student learning management system for discovering courses,
-            tracking enrolments and managing an academic catalogue through a connected mock API.
+            tracking their learning and browsing a course catalogue backed by Supabase.
           </p>
           <div className="hero-actions">
             <Link className="primary-btn" to={user ? "/dashboard" : "/register"}>
@@ -27,10 +27,10 @@ export default function Home() {
           <div className="console-grid">
             <div><small>STUDENTS</small><strong>ACTIVE</strong></div>
             <div><small>COURSES</small><strong>LIVE</strong></div>
-            <div><small>API</small><strong>5000</strong></div>
+            <div><small>DATA</small><strong>LIVE</strong></div>
             <div><small>STATE</small><strong>SYNCED</strong></div>
           </div>
-          <div className="console-line"><i /> API GATEWAY CONNECTED</div>
+          <div className="console-line"><i /> SUPABASE CONNECTED</div>
           <div className="console-line"><i /> COURSE REGISTRY AVAILABLE</div>
           <div className="console-line"><i /> AUTH STATE READY</div>
         </div>
@@ -38,8 +38,8 @@ export default function Home() {
 
       <div className="feature-strip">
         <div><span>01</span><b>STUDENT ACCESS</b><p>Register, login and maintain a persistent session.</p></div>
-        <div><span>02</span><b>COURSE DISCOVERY</b><p>Browse live course records from the mock backend.</p></div>
-        <div><span>03</span><b>LEARNING STATE</b><p>See enrolment, progress and notifications.</p></div>
+        <div><span>02</span><b>COURSE DISCOVERY</b><p>Browse a live Supabase course catalogue.</p></div>
+        <div><span>03</span><b>LEARNING STATE</b><p>Manage your student profile and session.</p></div>
       </div>
     </section>
   );

@@ -1,23 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { getEnrollments, getNotifications } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import { useCourses } from "../context/CourseContext";
 
 export default function Dashboard() {
   const { user } = useAuth();
   const { courses } = useCourses();
-  const [enrollments, setEnrollments] = useState([]);
-  const [notifications, setNotifications] = useState([]);
-
-  useEffect(() => {
-    async function load() {
-      const [e, n] = await Promise.all([getEnrollments(), getNotifications()]);
-      setEnrollments(e.data.filter((item) => item.userId === user.id));
-      setNotifications(n.data.filter((item) => item.userId === user.id));
-    }
-    load().catch(console.error);
-  }, [user.id]);
+  const enrollments = [];
+  const notifications = [];
 
   const enrolled = useMemo(
     () => enrollments.map((enrollment) => ({

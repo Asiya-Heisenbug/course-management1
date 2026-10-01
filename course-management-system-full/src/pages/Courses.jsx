@@ -25,7 +25,7 @@ export default function Courses() {
   return (
     <section className="page">
       <div className="page-head">
-        <div><span className="section-tag">/ COURSE_REGISTRY</span><h1>Course catalogue <em>{String(courses.length).padStart(2, "0")}</em></h1><p>Live records loaded from JSON Server.</p></div>
+        <div><span className="section-tag">/ COURSE_REGISTRY</span><h1>Course catalogue <em>{String(courses.length).padStart(2, "0")}</em></h1><p>Live records loaded from Supabase.</p></div>
         <Link className="primary-btn" to="/add-course">+ ADD COURSE</Link>
       </div>
 

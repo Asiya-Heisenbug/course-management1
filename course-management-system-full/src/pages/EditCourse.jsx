@@ -28,5 +28,5 @@ export default function EditCourse() {
 
   if (loading || !course) return <section className="page"><div className="state-box">LOADING RECORD...</div></section>;
 
-  return <section className="page form-page"><div className="page-head"><div><span className="section-tag">/ EDIT_RECORD / {String(id).padStart(2, "0")}</span><h1>Modify course</h1><p>Persist changes with PUT /courses/:id.</p></div></div><CourseForm initialValues={course} onSubmit={submit} submitLabel="Save changes" busy={busy} /></section>;
+  return <section className="page form-page"><div className="page-head"><div><span className="section-tag">/ EDIT_RECORD / {String(id).padStart(2, "0")}</span><h1>Modify course</h1><p>Save changes to the Supabase catalogue.</p></div></div><CourseForm initialValues={course} onSubmit={submit} submitLabel="Save changes" busy={busy} /></section>;
 }

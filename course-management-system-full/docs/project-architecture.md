@@ -2,61 +2,30 @@
 
 ```text
 Browser
-  |
-  v
+      |
+      v
 React Router
-  |
-  +--> Public Pages
-  |      Home
-  |      Login
-  |      Register
-  |
-  +--> Protected Pages
-         Dashboard
-         Courses
-         Add Course
-         Edit Course
-              |
-              v
-        React Context
-        AuthContext / CourseContext
-              |
-              v
-          Axios API
-              |
-              v
-        JSON Server :5000
-              |
-              v
-           db.json
+      |
+      +--> Public Pages: Home, Login, Register
+      |
+      +--> Protected Pages: Dashboard, Courses, Add Course, Edit Course
+                                          |
+                                          v
+                        React Context
+                        AuthContext / CourseContext
+                               |             |
+                               v             v
+             Supabase Auth   Supabase Postgres
 ```
 
 ## State
 
 ### AuthContext
-Stores the current logged-in student and exposes:
-- login
-- register
-- logout
-- authLoading
-
-The user is persisted using browser localStorage.
+Uses Supabase Auth for registration, email/password login, logout, and persisted sessions.
 
 ### CourseContext
-Stores:
-- courses
-- loading
-- error
+Stores courses, loading state, and errors. Supabase Postgres is used to fetch and modify course records.
 
-And exposes:
-- fetchCourses
-- addCourse
-- editCourse
-- deleteCourse
+## Database
 
-## API resources
-
-- `/users`
-- `/courses`
-- `/enrollments`
-- `/notifications`
+The `courses` table and row-level security policies are created by `supabase/setup.sql`.

@@ -7,7 +7,7 @@ export default function Login() {
   const { login, authLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [form, setForm] = useState({ identifier: "", password: "" });
+  const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
 
@@ -23,7 +23,7 @@ export default function Login() {
     if (Object.keys(validation).length) return;
 
     try {
-      await login(form.identifier, form.password);
+      await login(form.email, form.password);
       setMessage("Authentication successful.");
       navigate(location.state?.from || "/dashboard", { replace: true });
     } catch (error) {
@@ -42,15 +42,15 @@ export default function Login() {
         {message && <div className="form-alert success">{message}</div>}
 
         <form onSubmit={submit}>
-          <label>Email or username<input name="identifier" value={form.identifier} onChange={change} placeholder="asiya@example.com" /></label>
-          {errors.identifier && <small className="field-error">{errors.identifier}</small>}
+          <label>Email address<input name="email" value={form.email} onChange={change} placeholder="you@example.com" /></label>
+          {errors.email && <small className="field-error">{errors.email}</small>}
           <label>Password<input type="password" name="password" value={form.password} onChange={change} placeholder="••••••••" /></label>
           {errors.password && <small className="field-error">{errors.password}</small>}
           <button className="primary-btn full" disabled={authLoading}>{authLoading ? "AUTHENTICATING..." : "LOGIN →"}</button>
         </form>
 
         <div className="auth-footer">New here? <Link to="/register">Create an account</Link></div>
-        <div className="demo-note">DEMO: asiya / Password123</div>
+        <div className="demo-note">Use the email address you registered with.</div>
       </div>
     </section>
   );

@@ -20,5 +20,5 @@ export default function AddCourse() {
     } finally { setBusy(false); }
   }
 
-  return <section className="page form-page"><div className="page-head"><div><span className="section-tag">/ NEW_RECORD</span><h1>Add course</h1><p>Create a new catalogue record with POST /courses.</p></div></div><CourseForm onSubmit={submit} submitLabel="Add course" busy={busy} /></section>;
+  return <section className="page form-page"><div className="page-head"><div><span className="section-tag">/ NEW_RECORD</span><h1>Add course</h1><p>Create a new course in the Supabase catalogue.</p></div></div><CourseForm onSubmit={submit} submitLabel="Add course" busy={busy} /></section>;
 }

@@ -12,7 +12,7 @@ export function validatePassword(password) {
 
 export function validateLogin(values) {
   const errors = {};
-  if (!values.identifier.trim()) errors.identifier = "Email or username is required.";
+  if (!values.email.trim() || !validateEmail(values.email)) errors.email = "Enter a valid email address.";
   if (!values.password) errors.password = "Password is required.";
   return errors;
 }

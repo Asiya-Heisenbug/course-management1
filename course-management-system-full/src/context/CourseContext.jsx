@@ -16,7 +16,7 @@ export function CourseProvider({ children }) {
       setCourses(response.data);
     } catch (err) {
       console.error(err);
-      setError("Unable to connect to the mock API. Start JSON Server on port 5000.");
+      setError("Unable to load courses from Supabase. Check that the database setup has been run.");
     } finally {
       setLoading(false);
     }

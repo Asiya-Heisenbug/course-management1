@@ -1,40 +1,48 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { getUsers, createUser } from "../services/api";
+import { supabase } from "../services/supabase";
 
 const AuthContext = createContext(null);
 
+function toAppUser(authUser) {
+  const metadata = authUser.user_metadata || {};
+
+  return {
+    id: authUser.id,
+    name: metadata.name || authUser.email?.split("@")[0] || "Student",
+    username: metadata.username || "",
+    email: authUser.email || "",
+    phone: metadata.phone || "",
+    role: "Student",
+    program: metadata.program || "B.Sc. Computer Science",
+    year: metadata.year || "First Year"
+  };
+}
+
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem("course-command-user")) || null;
-    } catch {
-      return null;
-    }
-  });
-  const [authLoading, setAuthLoading] = useState(false);
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
 
   useEffect(() => {
-    if (user) localStorage.setItem("course-command-user", JSON.stringify(user));
-    else localStorage.removeItem("course-command-user");
-  }, [user]);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ? toAppUser(session.user) : null);
+      setAuthLoading(false);
+    });
 
-  async function login(identifier, password) {
+    return () => subscription.unsubscribe();
+  }, []);
+
+  async function login(email, password) {
     setAuthLoading(true);
     try {
-      const response = await getUsers();
-      const found = response.data.find(
-        (item) =>
-          (item.email.toLowerCase() === identifier.trim().toLowerCase() ||
-            item.username.toLowerCase() === identifier.trim().toLowerCase()) &&
-          item.password === password
-      );
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password
+      });
+      if (error) throw error;
 
-      if (!found) throw new Error("Invalid email/username or password.");
-
-      const safeUser = { ...found };
-      delete safeUser.password;
-      setUser(safeUser);
-      return safeUser;
+      const appUser = toAppUser(data.user);
+      setUser(appUser);
+      return appUser;
     } finally {
       setAuthLoading(false);
     }
@@ -43,35 +51,32 @@ export function AuthProvider({ children }) {
   async function register(values) {
     setAuthLoading(true);
     try {
-      const response = await getUsers();
-      const duplicate = response.data.some(
-        (item) =>
-          item.email.toLowerCase() === values.email.trim().toLowerCase() ||
-          item.username.toLowerCase() === values.username.trim().toLowerCase()
-      );
-      if (duplicate) throw new Error("Email or username already exists.");
-
-      const responseUser = await createUser({
-        name: values.name.trim(),
-        username: values.username.trim(),
+      const { data, error } = await supabase.auth.signUp({
         email: values.email.trim(),
-        phone: values.phone.trim(),
         password: values.password,
-        role: "Student",
-        program: values.program || "B.Sc. Computer Science",
-        year: values.year || "First Year"
+        options: {
+          emailRedirectTo: `${window.location.origin}${import.meta.env.BASE_URL}`,
+          data: {
+            name: values.name.trim(),
+            username: values.username.trim(),
+            phone: values.phone.trim(),
+            program: values.program || "B.Sc. Computer Science",
+            year: values.year || "First Year"
+          }
+        }
       });
+      if (error) throw error;
 
-      const safeUser = { ...responseUser.data };
-      delete safeUser.password;
-      setUser(safeUser);
-      return safeUser;
+      if (data.session) setUser(toAppUser(data.user));
+      return { confirmationRequired: !data.session };
     } finally {
       setAuthLoading(false);
     }
   }
 
-  function logout() {
+  async function logout() {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
     setUser(null);
   }
 
