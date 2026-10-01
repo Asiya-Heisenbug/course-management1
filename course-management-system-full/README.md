@@ -13,8 +13,7 @@ Course Command is a responsive React application using Supabase Auth for account
 - Login with email and password.
 - View personal information.
 - Browse available courses.
-- View enrolment and progress status.
-- Read notifications.
+- Maintain a profile and persistent authenticated session.
 
 ### Course administrators
 - View course records.
@@ -33,13 +32,12 @@ Course Command is a responsive React application using Supabase Auth for account
 - Protected dashboard/course routes
 - Student dashboard
 - Course catalogue
-- Course CRUD
 - Supabase-backed course CRUD
 - Loading and error states
 - Responsive desktop/tablet/mobile layout
 - Reusable React components
 - Context API state management
-- Axios API layer
+- Supabase API layer
 - Modular validation and service functions
 
 ## 4. Technology Stack
@@ -55,15 +53,14 @@ Course Command is a responsive React application using Supabase Auth for account
 - Supabase JavaScript client
 - Supabase Auth and Postgres
 - Vite
-- Browser localStorage
 
 ## 5. Folder Structure
 
 ```text
 course-management-system-full/
 ├── docs/
-├── mock-api/
-│   └── db.json
+├── supabase/
+│   └── setup.sql
 ├── public/
 ├── src/
 │   ├── components/
@@ -84,7 +81,8 @@ course-management-system-full/
 │   │   ├── AddCourse.jsx
 │   │   └── EditCourse.jsx
 │   ├── services/
-│   │   └── api.js
+│   │   ├── api.js
+│   │   └── supabase.js
 │   ├── utils/
 │   │   └── validation.js
 │   ├── styles/
@@ -99,7 +97,7 @@ course-management-system-full/
 ## 6. Supabase setup
 
 1. Create a Supabase project and enable Email under **Authentication → Sign In / Providers**.
-2. In **Authentication → URL Configuration**, set the Site URL and an allowed redirect URL to `https://asiya-heisenbug.github.io/course-management1/`.
+2. In **Authentication → URL Configuration**, set the Site URL and allowed redirect URLs to `https://asiya-heisenbug.github.io/course-management1/` and `http://localhost:5173/` for local testing.
 3. Open **SQL Editor**, paste `supabase/setup.sql`, and run it. This creates the courses table, enables row-level security, and inserts the starter courses.
 
 The frontend uses the Supabase project URL and publishable key in `src/services/supabase.js`. The publishable key is designed for browser use; database access is controlled by the policies in `setup.sql`. Never put a secret or service-role key in frontend code.
