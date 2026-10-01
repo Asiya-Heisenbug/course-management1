@@ -5,9 +5,7 @@ import { useCourses } from "../context/CourseContext";
 
 export default function Dashboard() {
   const { user } = useAuth();
-  const { courses } = useCourses();
-  const enrollments = [];
-  const notifications = [];
+  const { courses, enrollments, enrollmentsLoading } = useCourses();
 
   const enrolled = useMemo(
     () => enrollments.map((enrollment) => ({
@@ -44,7 +42,7 @@ export default function Dashboard() {
 
         <div className="learning-panel panel">
           <div className="panel-head"><span className="panel-label">MY LEARNING</span><Link to="/courses">BROWSE ALL →</Link></div>
-          {enrolled.length ? enrolled.map(({ id, course, status, progress }) => (
+          {enrollmentsLoading ? <div className="empty-small">LOADING ENROLLMENTS...</div> : enrolled.length ? enrolled.map(({ id, course, status, progress }) => (
             <div className="enrollment-row" key={id}>
               <div><small>{course?.courseCode}</small><strong>{course?.courseName || "Course unavailable"}</strong></div>
               <div className="progress-wrap"><div className="progress-bar"><i style={{ width: `${progress}%` }} /></div><span>{progress}%</span></div>
@@ -60,13 +58,8 @@ export default function Dashboard() {
         </div>
 
         <div className="notifications-panel panel">
-          <div className="panel-head"><span className="panel-label">NOTIFICATIONS</span><span>{notifications.filter(n => !n.read).length} UNREAD</span></div>
-          {notifications.map((notification) => (
-            <div className="notification" key={notification.id}>
-              <i />
-              <div><strong>{notification.title}</strong><p>{notification.message}</p></div>
-            </div>
-          ))}
+          <div className="panel-head"><span className="panel-label">NOTIFICATIONS</span></div>
+          <div className="empty-small">No notifications yet.</div>
         </div>
       </div>
     </section>

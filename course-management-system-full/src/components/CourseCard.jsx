@@ -7,7 +7,7 @@ const accent = {
   "Data Science": "green"
 };
 
-export default function CourseCard({ course, admin = false, onDelete }) {
+export default function CourseCard({ course, admin = false, onDelete, onEnroll, isEnrolled, enrolling }) {
   return (
     <article className={`course-card ${accent[course.category] || "cyan"}`}>
       <div className="course-icon">
@@ -26,14 +26,18 @@ export default function CourseCard({ course, admin = false, onDelete }) {
           <span><small>LEVEL</small>{course.level}</span>
         </div>
       </div>
-      {admin ? (
-        <div className="card-actions">
+      <div className="card-actions">
+        <span className="catalog-tag">{course.category}</span>
+        {onEnroll && (
+          <button disabled={isEnrolled || enrolling} onClick={() => onEnroll(course.id)}>
+            {isEnrolled ? "ENROLLED" : enrolling ? "ENROLLING..." : "ENROLL"}
+          </button>
+        )}
+        {admin && <>
           <Link to={`/edit-course/${course.id}`}>EDIT ↗</Link>
           <button onClick={() => onDelete(course.id)}>DELETE</button>
-        </div>
-      ) : (
-        <div className="catalog-tag">{course.category}</div>
-      )}
+        </>}
+      </div>
     </article>
   );
 }

@@ -22,6 +22,8 @@ export default function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/courses" element={<Courses />} />
+          </Route>
+          <Route element={<ProtectedRoute adminOnly />}>
             <Route path="/add-course" element={<AddCourse />} />
             <Route path="/edit-course/:id" element={<EditCourse />} />
           </Route>

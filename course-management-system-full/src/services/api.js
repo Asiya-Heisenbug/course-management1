@@ -35,6 +35,16 @@ function toCourseRecord(course) {
   };
 }
 
+function fromEnrollmentRecord(record) {
+  return {
+    id: record.id,
+    userId: record.user_id,
+    courseId: record.course_id,
+    status: record.status,
+    progress: record.progress
+  };
+}
+
 function unwrap({ data, error }) {
   if (error) throw error;
   return { data: data ? fromCourseRecord(data) : null };
@@ -69,4 +79,23 @@ export async function updateCourse(id, course) {
 export async function removeCourse(id) {
   const { error } = await supabase.from("courses").delete().eq("id", id);
   if (error) throw error;
+}
+
+export async function getEnrollments() {
+  const { data, error } = await supabase
+    .from("enrollments")
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return { data: data.map(fromEnrollmentRecord) };
+}
+
+export async function createEnrollment(courseId, userId) {
+  const { data, error } = await supabase
+    .from("enrollments")
+    .insert({ course_id: courseId, user_id: userId })
+    .select()
+    .single();
+  if (error) throw error;
+  return { data: fromEnrollmentRecord(data) };
 }

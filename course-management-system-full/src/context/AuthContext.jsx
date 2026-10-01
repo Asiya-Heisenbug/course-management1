@@ -5,6 +5,7 @@ const AuthContext = createContext(null);
 
 function toAppUser(authUser) {
   const metadata = authUser.user_metadata || {};
+  const appMetadata = authUser.app_metadata || {};
 
   return {
     id: authUser.id,
@@ -12,7 +13,7 @@ function toAppUser(authUser) {
     username: metadata.username || "",
     email: authUser.email || "",
     phone: metadata.phone || "",
-    role: "Student",
+    role: appMetadata.role === "admin" ? "Admin" : "Student",
     program: metadata.program || "B.Sc. Computer Science",
     year: metadata.year || "First Year"
   };

@@ -32,6 +32,7 @@ Course Command is a responsive React application using Supabase Auth for account
 - Protected dashboard/course routes
 - Student dashboard
 - Course catalogue
+- Student course enrollment and progress tracking
 - Supabase-backed course CRUD
 - Loading and error states
 - Responsive desktop/tablet/mobile layout
@@ -98,9 +99,18 @@ course-management-system-full/
 
 1. Create a Supabase project and enable Email under **Authentication → Sign In / Providers**.
 2. In **Authentication → URL Configuration**, set the Site URL and allowed redirect URLs to `https://asiya-heisenbug.github.io/course-management1/` and `http://localhost:5173/` for local testing.
-3. Open **SQL Editor**, paste `supabase/setup.sql`, and run it. This creates the courses table, enables row-level security, and inserts the starter courses.
+3. Open **SQL Editor**, paste `supabase/setup.sql`, and run it. This creates the courses and enrollments tables, configures row-level security, and inserts the starter courses. Rerun this whole script after updates; it is safe to rerun.
+4. To make your account a course admin, first register and confirm it, then run this in **SQL Editor** with your signup email:
 
-The frontend uses the Supabase project URL and publishable key in `src/services/supabase.js`. The publishable key is designed for browser use; database access is controlled by the policies in `setup.sql`. Never put a secret or service-role key in frontend code.
+	```sql
+	update auth.users
+	set raw_app_meta_data = coalesce(raw_app_meta_data, '{}'::jsonb) || '{"role":"admin"}'::jsonb
+	where email = 'you@example.com';
+	```
+
+	Log out and back in to refresh the admin role in your session. Regular students can enroll without this step.
+
+The frontend uses the Supabase project URL and publishable key in `src/services/supabase.js`. The publishable key is designed for browser use; database access is controlled by the policies in `setup.sql`. Never put a secret or service-role key in frontend code. Course edits are restricted to users whose trusted Supabase **app metadata** has `role` set to `admin`.
 
 ## 7. Run locally
 
@@ -138,4 +148,4 @@ Supabase Auth manages registration and login. Supabase Postgres stores the cours
 
 ## Important note
 
-Course enrolment and notification panels are currently empty. Any authenticated account can add, edit, and delete courses; a production app should add administrator roles and stricter write policies before public use.
+Notifications are not connected yet. Students can enroll in courses and track their enrollment progress. Course creation and editing require the Supabase admin role.
